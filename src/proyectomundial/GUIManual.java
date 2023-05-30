@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 import proyectomundial.DAO.SeleccionDAO;
 import proyectomundial.model.Seleccion;
 
@@ -53,6 +54,9 @@ public class GUIManual extends JFrame {
     
     private JPanel jPanelMenuResultados;
     private JLabel btnResultados;
+    
+    private JPanel jPanelInciar;
+    private JPanel btnIniciar;
     
     private JPanel jPanelMenuDashboardSel;
     private JLabel btnDashboardSel;
@@ -106,6 +110,9 @@ public class GUIManual extends JFrame {
         jPanelMenuResultados = new JPanel();
         btnResultados = new JLabel();
         
+        jPanelInciar= new JPanel();
+        btnIniciar= new JPanel();
+        
         jPanelMenuDashboardSel = new JPanel();
         btnDashboardSel = new JLabel();
         
@@ -133,12 +140,14 @@ public class GUIManual extends JFrame {
         // Pinta y ajuste diseño del contenedor del panel izquierdo
         pintarPanelIzquierdo();
         
-        
+        pintarIniciar();
         
         // Inicializa los componentes del panel derecho de los contenidos
         jPanelRight = new JPanel();
         jPanelLabelTop = new JPanel();
         jPanelMain = new JPanel();
+        
+      
         
         // Pinta la barra superrior de color azul claro, del panel de contenido
         pintarLabelTop();
@@ -160,7 +169,41 @@ public class GUIManual extends JFrame {
         jPanelLeft.add(jPanelIconFIFA, BorderLayout.LINE_START);
         
     }
-    
+    public void pintarIniciar(){
+        btnIniciar.setToolTipText("Inciar");
+        btnIniciar.setForeground(new java.awt.Color(255, 255, 255));
+        
+        JLabel vacioHome = new JLabel();
+        jPanelInciar.setBackground(new java.awt.Color(17, 41, 63));
+        jPanelInciar.setPreferredSize((new java.awt.Dimension(220, 35)));
+        jPanelInciar.setLayout(new BorderLayout(15, 0));
+        jPanelInciar.add(vacioHome, BorderLayout.WEST);
+         jPanelInciar.add(btnIniciar, BorderLayout.CENTER);
+        jPanelMenu.add(jPanelInciar);
+        
+        btnIniciar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                System.out.println("Iniciar");
+                accionIniciar();
+            }
+        });   
+    }
+     private void accionIniciar(){
+         jLabelTop.setText("Iniciar");
+      
+         jPanelMain.removeAll();
+         JPanel homePanel = new JPanel();
+         JLabel imageHome = new JLabel();
+         pintarIniciar();
+         
+          imageHome.setIcon(new ImageIcon(getClass().getResource("/resources/home.jpg"))); // NOI18N
+        //imageHome.setPreferredSize(new java.awt.Dimension(810, 465));
+        homePanel.add(imageHome);
+         
+         jPanelMain.add(homePanel, BorderLayout.CENTER);
+         jPanelMain.repaint();
+         jPanelMain.revalidate();
+    } 
     /**
      * Función que se encarga de ajustar los elementos gráficos que componente la opción de navegación del HOME
      * Define estilos, etiquetas, iconos que decoran la opción del Menú. 
@@ -242,12 +285,7 @@ public class GUIManual extends JFrame {
      * Si la lista de selecciones en vacía, muestra un botón que permite cargar un archivo CSV
      * con la información de las selelecciones
      */
-    private void accionSelecciones() {
-        
-        if(!haySesion) {
-            JOptionPane.showMessageDialog(null, "No hay sesión iniciada");
-            return;
-        }
+    private void accionSelecciones() { ///////////////////////////////////////////////////////////////////////////////////////////////////////**
         
         jLabelTop.setText("Selecciones");
         selecciones = seleccionDAO.getSeleccionesMatriz();
@@ -313,12 +351,7 @@ public class GUIManual extends JFrame {
      * con la información de los resultados
      */
     private void accionResultados() {
-        
-        if(!haySesion) {
-            JOptionPane.showMessageDialog(null, "No hay sesión iniciada");
-            return;
-        }
-        
+       
         jLabelTop.setText("Resultados");
 
         // Si no hay resultados cargados, muestra el botón de carga de resultados
@@ -387,12 +420,8 @@ public class GUIManual extends JFrame {
      * Revise el proceso que se siguen en los demás métodos para poder actualizar la información de los paneles
      */
     private void accionDashboardSel() {
-        
-        if(!haySesion) {
-            JOptionPane.showMessageDialog(null, "No hay sesión iniciada");
-            return;
-        }
-        
+        jLabelTop.setText("Dash De Seleccion");
+    
         JTextArea a = new JTextArea();
         a.setText("En esta sección, teniendo en cuenta los datos que fueron cargados en la matriz de selecciones \n"
                 + "se deben mostrar los siguientes datos:\n\n"
@@ -444,13 +473,7 @@ public class GUIManual extends JFrame {
      * Se debe módificar este método para poder calcular y pintar las diferentes informaciones que son solicitadas
      * Revise el proceso que se siguen en los demás métodos para poder actualizar la información de los paneles
      */
-    private void accionDashboardRes() {
-        
-        if(!haySesion) {
-            JOptionPane.showMessageDialog(null, "No hay sesión iniciada");
-            return;
-        }
-        
+    private void accionDashboardRes() { 
         JTextArea a = new JTextArea();
         a.setText("En esta sección, teniendo en cuenta los datos que fueron cargados en la matriz de resultados \n"
                 + "se deben mostrar los siguientes datos:\n\n"

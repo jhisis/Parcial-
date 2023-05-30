@@ -6,7 +6,9 @@ package proyectomundial.DAO;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import proyectomundial.model.Seleccion;
 import proyectomundial.util.BasedeDatos;
 import static proyectomundial.util.BasedeDatos.ejecutarSQL;
@@ -23,7 +25,7 @@ public class SeleccionDAO {
     
     public boolean registrarSeleccion(Seleccion seleccion) {
         
-        String sql = "INSERT INTO poo.seleccion (nombre, continente, dt, nacionalidad) values("
+        String sql = "INSERT INTO poo.users (nombre, continente, dt, nacionalidad) values("
                 + "'" + seleccion.getNombre() + "', " 
                 + "'" + seleccion.getContinente() + "', " 
                 + "'" + seleccion.getDt() + "', " 
@@ -37,7 +39,7 @@ public class SeleccionDAO {
     
     public List<Seleccion> getSelecciones() {
         
-        String sql = "SELECT nombre, continente, dt, nacionalidad FROM poo.seleccion";
+        String sql = "SELECT nombre, continente, dt, nacionalidad FROM poo.users";
         List<Seleccion> selecciones = new ArrayList<Seleccion>();
         
         try {
@@ -82,5 +84,84 @@ public class SeleccionDAO {
         }
         
         return matrizSelecciones;
+    }
+    
+    public List<Seleccion> buscarSeleccion(String valor) {
+    String sql = "SELECT nombre, continente, dt, nacionalidad FROM poo.users WHERE  nombre = "+"'" + valor + "'";
+    List<Seleccion> selecciones = new ArrayList<Seleccion>();
+
+    try {
+        ResultSet result = BasedeDatos.ejecutarSQL(sql);
+
+        if(result != null) {
+
+            while (result.next()) {
+                Seleccion seleccion = new Seleccion(result.getString("nombre"), result.getString("continente"), result.getString("dt"), result.getString("nacionalidad"));
+                selecciones.add(seleccion);
+            }
+        }
+    } catch (Exception e) {
+        System.out.println(e.toString());
+        System.out.println("Error consultando selecciones");
+    }
+
+    return selecciones;
+    }
+    public String[][] getSeleccionesMatriz(String valor) {
+        
+        String[][] matrizSelecciones = null;
+        List<Seleccion> selecciones = buscarSeleccion(valor);
+        
+        if(selecciones != null) {
+            
+            matrizSelecciones = new String[selecciones.size()][4];
+
+            int x = 0;
+            for (Seleccion seleccion : selecciones) {
+
+                matrizSelecciones[x][0] = seleccion.getNombre();
+                matrizSelecciones[x][1] = seleccion.getContinente();
+                matrizSelecciones[x][2] = seleccion.getDt();
+                matrizSelecciones[x][3] = seleccion.getNacionalidad();
+                x++;
+            }
+        }
+        
+        return matrizSelecciones;
+    }
+    public int getTotalSeleccionesCargadas() {
+    String sql = "SELECT COUNT(*) AS total FROM poo.users";
+    int total = 0;
+
+    try {
+        ResultSet result = BasedeDatos.ejecutarSQL(sql);
+
+        if(result != null && result.next()) {
+            total = result.getInt(1);
+        }
+    } catch (Exception e) {
+        System.out.println(e.toString());
+        System.out.println("Error obteniendo total de selecciones");
+    }
+
+    return total;
+    }
+
+    public int getTotalResultadosCargadas() {
+    String sql = "SELECT COUNT(*) AS total FROM poo.users resultado";
+    int total = 0;
+
+    try {
+        ResultSet result = BasedeDatos.ejecutarSQL(sql);
+
+        if(result != null && result.next()) {
+            total = result.getInt(1);
+        }
+    } catch (Exception e) {
+        System.out.println(e.toString());
+        System.out.println("Error obteniendo total de resultados");
+    }
+
+    return total;
     }
 }
